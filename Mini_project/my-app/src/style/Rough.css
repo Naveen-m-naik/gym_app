@@ -1,0 +1,118 @@
+/* =======================
+   Wrapper for Background
+======================= */
+.landing-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('https://cdn.magicdecor.in/com/2023/10/13182746/I-love-gym-C-710x488.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Dark overlay */
+.landing-wrapper .overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 0;
+}
+
+/* Landing content centered above overlay */
+.landing-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* =======================
+   Container (Frosted Glass)
+======================= */
+.container {
+  max-width: 1000px;
+  width: 100%;
+  padding: 30px 25px;
+  background: rgba(255, 255, 255, 0.1); /* frosted glass */
+  border-radius: 15px;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  text-align: center;
+}
+
+/* Heading */
+.container h2 {
+  margin-bottom: 20px;
+  color: #ffdd00;
+  font-size: 28px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+/* Error message */
+.error {
+  color: #ff6347;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Table */
+.client-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+/* Table header */
+.client-table th {
+  background: rgba(255,49,49,0.9);
+  color: white;
+  padding: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Table rows */
+.client-table td {
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* Row hover effect */
+.client-table tbody tr:hover {
+  background: rgba(255,255,255,0.1);
+  transition: 0.3s;
+}
+
+/* Empty data */
+.container p {
+  font-size: 18px;
+  color: #eaeaea;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  .container h2 {
+    font-size: 22px;
+  }
+
+  .client-table th, .client-table td {
+    font-size: 14px;
+    padding: 8px;
+  }
+}

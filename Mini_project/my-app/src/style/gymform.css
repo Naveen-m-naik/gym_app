@@ -1,0 +1,70 @@
+/* Gym Form Container */
+.gym-form {
+  width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  text-align: center;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  font-family: Arial, sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gym-form:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+/* Title */
+.gym-form h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffdd00;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  margin-bottom: 15px;
+}
+
+/* Inputs */
+.gym-form input {
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  outline: none;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.gym-form input::placeholder {
+  color: #e0e0e0;
+}
+
+.gym-form input:focus {
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Buttons */
+.gym-form button {
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gym-form button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}

@@ -1,0 +1,93 @@
+/* Full screen wrapper */
+.trainer-wrapper {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438") no-repeat center center/cover;
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+/* Overlay for dark effect */
+.trainer-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Form box */
+.trainer-box {
+  position: relative;
+  z-index: 2; /* Keeps form above overlay */
+  background: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 10px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Title */
+.trainer-box p {
+  font-size: 1.6rem;
+  color: #222;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Input fields */
+.trainer-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.trainer-inputs input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #bbb;
+  font-size: 1rem;
+  outline: none;
+}
+
+.trainer-inputs input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+/* Button */
+.trainer-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.trainer-btn:hover {
+  background: #0056b3;
+}
+
+/* Extra links */
+.trainer-links {
+  margin-top: 12px;
+}
+
+.trainer-links a {
+  color: #007bff;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.trainer-links a:hover {
+  text-decoration: underline;
+}

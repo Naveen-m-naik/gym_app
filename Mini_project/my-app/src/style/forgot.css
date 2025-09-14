@@ -1,0 +1,99 @@
+/* Forgot Page Container */
+.forgot-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Forgot Box (Glassmorphism style) */
+.forgot-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  width: 400px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.forgot-box:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+/* Title */
+.forgot-box h2 {
+  margin-bottom: 1.5rem;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffdd00;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+/* Inputs */
+.forgot-input {
+  width: 100%;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.forgot-input::placeholder {
+  color: #e0e0e0;
+}
+
+.forgot-input:focus {
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Buttons */
+.forgot-btn {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.3s ease;
+}
+
+.forgot-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+
+/* Back link */
+.back-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #00c6ff;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.back-link:hover {
+  color: #ffdd00;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

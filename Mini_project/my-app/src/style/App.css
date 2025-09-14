@@ -1,0 +1,23 @@
+/* Global background that stays across all pages */
+.global-bg {
+  position: fixed;       /* stays in place even when navigating */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://cdn.magicdecor.in/com/2023/10/13182746/I-love-gym-C-710x488.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;           /* behind all content */
+}
+
+/* Optional dark overlay for contrast */
+.global-bg::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
