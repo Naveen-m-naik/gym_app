@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../style/Sidebar.css";   // 👈 Import external CSS
+import "../style/Sidebar.css"; // same CSS file (we’ll simplify it below)
 
 function Sidebar() {
   const stats = [
@@ -11,53 +11,54 @@ function Sidebar() {
   ];
 
   return (
-    <div className="sidebar">
-      {/* Dashboard Title */}
-      <h2 className="sidebar-title">Trainer Dashboard</h2>
+    <div className="trainer-dashboard">
+      {/* ---- Header ---- */}
+      <header className="dashboard-header">
+        <h1>Trainer Dashboard 👟</h1>
 
-      {/* ---- Navigation Links ---- */}
-      <nav className="sidebar-nav">
-       <Link to="/Trainer_dash/trainer_main" className="nav-link">🏠 Home</Link>
-        <Link to="/" className="nav-link">📅 Attendance</Link>
-        <Link to="/students" className="nav-link">👨‍🎓 Students Joined</Link>
-        <Link to="/payments" className="nav-link">💳 Payments</Link>
-        <Link to="/workout" className="nav-link">🏋️ Workout Plans</Link>
-        <Link to="/diet" className="nav-link">🥗 Diet Plans</Link>
-        <Link to="/links" className="nav-link">🔗 Links</Link>
-        <Link to="/Gym/rough" className="nav-link">📝 Registered</Link>  {/* ✅ New Link */}
-</nav>
+        {/* Simple Top Navigation */}
+        <nav className="top-nav">
+          <Link to="/Trainer_dash/trainer_main" className="nav-link">🏠 Home</Link>
+          <Link to="/attendance" className="nav-link">📅 Attendance</Link>
+          <Link to="/students" className="nav-link">👨‍🎓 Students</Link>
+          <Link to="/payments" className="nav-link">💳 Payments</Link>
+          <Link to="/workout" className="nav-link">🏋️ Workout</Link>
+          <Link to="/diet" className="nav-link">🥗 Diet</Link>
+          <Link to="/links" className="nav-link">🔗 Links</Link>
+          <Link to="/registered" className="nav-link">📝 Registered</Link>
+        </nav>
+      </header>
 
-
-      {/* ---- Dashboard Content ---- */}
-      <div className="dashboard-content">
-        <h1 className="welcome-title">Welcome, Trainer 👋</h1>
-        <p className="welcome-text">
-          Manage your <span>students</span>, track <span>attendance</span>, handle <span>payments</span>, 
-          and push <span>workout/diet plans</span> right here!
+      {/* ---- Welcome Text ---- */}
+      <section className="welcome-section">
+        <h2>Welcome, Trainer 👋</h2>
+        <p>
+          Manage your <span>students</span>, track <span>attendance</span>, handle
+          <span> payments</span>, and create <span>workout/diet plans</span> — all in one place.
         </p>
+      </section>
 
-        {/* Stats Section */}
-        <div className="stats-container">
-          {stats.map((item, index) => (
-            <div key={index} className="stat-card">
-              <h2>{item.title}</h2>
-              <p>{item.value}</p>
-            </div>
-          ))}
-        </div>
+      {/* ---- Stats Cards ---- */}
+      <section className="stats-section">
+        {stats.map((item, index) => (
+          <div key={index} className="stat-card">
+            <h3>{item.title}</h3>
+            <p>{item.value}</p>
+          </div>
+        ))}
+      </section>
 
-        {/* Quick Actions */}
-        <div className="quick-actions">
-          <h2>Quick Actions</h2>
-          <ul>
-            <li>📅 Mark today’s attendance</li>
-            <li>👨‍🎓 Review new student admissions</li>
-            <li>💳 Check pending payments</li>
-            <li>🏋️ Add a new workout plan</li>
-            <li>🥗 Update diet recommendations</li>
-          </ul>
-        </div>
-      </div>
+      {/* ---- Quick Actions ---- */}
+      <section className="quick-actions">
+        <h2>Quick Actions</h2>
+        <ul>
+          <li>📅 Mark today’s attendance</li>
+          <li>👨‍🎓 Review new student admissions</li>
+          <li>💳 Check pending payments</li>
+          <li>🏋️ Add a new workout plan</li>
+          <li>🥗 Update diet recommendations</li>
+        </ul>
+      </section>
     </div>
   );
 }
