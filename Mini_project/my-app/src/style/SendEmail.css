@@ -1,0 +1,93 @@
+/* SendEmail.css */
+
+.email-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.email-card {
+  background-color: #ffffff;
+  padding: 30px 25px; /* slightly smaller padding */
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px; /* slightly smaller card */
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.email-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.email-card h2 {
+  margin-bottom: 20px;
+  color: #333333;
+  font-size: 26px;
+}
+.email-card input,
+.email-card textarea {
+  width: 90%;
+  padding: 10px 14px; /* reduced padding */
+  margin: 8px 0;       /* slightly smaller margin */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 15px;     /* slightly smaller font */
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.email-card textarea {
+  resize: none;
+  height: 90px;        /* smaller height */
+}
+
+.email-card input:focus,
+.email-card textarea:focus {
+  border-color: #ff7f50;
+  box-shadow: 0 0 8px rgba(255, 127, 80, 0.3);
+}
+
+.email-card textarea {
+  resize: none;
+  height: 90px; /* smaller textarea */
+}
+
+.email-card button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  background-color: #ff7f50;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.email-card button:hover {
+  background-color: #ff6333;
+  transform: translateY(-2px);
+}
+
+.email-card p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #28a745;
+}
+
+/* Different style for Go to Home button */
+.home-button {
+  background-color: #555555;
+}
+
+.home-button:hover {
+  background-color: #333333;
+}

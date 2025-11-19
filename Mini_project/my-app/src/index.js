@@ -15,6 +15,7 @@ import QrScan from './client_dash/client_qr';
 import GymQR from './Gym/commonqr';
 import Sidebar from './Trainer_dash/trainer_main';
 import MyAttendance from './client_dash/attendece_view';
+import SendEmail from './payment/send_mail';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import './style/App.css'; // Make sure global CSS is imported
@@ -42,6 +43,7 @@ root.render(
         <Route path='/Gym/commonqr' element={<GymQR/>}/>
         <Route path='/Trainer_dash/trainer_main' element={<Sidebar/>}/>
         <Route path='/client_dash/attendence_view' element={<MyAttendance/>}/>
+        <Route path='/payment/send_mail' element={<SendEmail/>}/>
       </Routes>
     </BrowserRouter>
   </>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../style/Sidebar.css"; // same CSS file (we’ll simplify it below)
+import "../style/Sidebar.css";
 
 function Sidebar() {
   const stats = [
@@ -26,6 +26,9 @@ function Sidebar() {
           <Link to="/diet" className="nav-link">🥗 Diet</Link>
           <Link to="/links" className="nav-link">🔗 Links</Link>
           <Link to="/registered" className="nav-link">📝 Registered</Link>
+
+          {/* ⭐ Added NEW Link Here */}
+          <Link to="/payment/send_mail" className="nav-link">📧 Send Mail</Link>
         </nav>
       </header>
 
