@@ -2,7 +2,7 @@
 const cron = require("node-cron");
 const Payment = require("./payment_model");
 const User = require("./client_model");
-const sendEmail = require("./sendEmail"); // ✅ Reusable email function
+const sendEmail = require("./payment_mail"); // ✅ Reusable email function
 
 // Run every day at 10:00 AM
 cron.schedule("0 10 * * *", async () => {
