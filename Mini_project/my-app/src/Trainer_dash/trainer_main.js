@@ -19,7 +19,7 @@ function Sidebar() {
         {/* Simple Top Navigation */}
         <nav className="top-nav">
           <Link to="/Trainer_dash/trainer_main" className="nav-link">🏠 Home</Link>
-          <Link to="/attendance" className="nav-link">📅 Attendance</Link>
+          <Link to="/Trainer_dash/attendence" className="nav-link">📅 Attendance</Link>
           <Link to="/students" className="nav-link">👨‍🎓 Students</Link>
           <Link to="/payments" className="nav-link">💳 Payments</Link>
           <Link to="/workout" className="nav-link">🏋️ Workout</Link>

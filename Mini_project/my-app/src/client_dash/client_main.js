@@ -36,7 +36,7 @@ function Home() {
         <h1 className="logo">Alvas Mavinakatte Fitness</h1>
         <nav>
           <Link to="/client_dash/client_main">🏠 Home</Link>
-          <Link to="/payment">💳 Payment</Link>
+          <Link to="/client_dash/payment">💳 Payment</Link>
           <Link to="/client_dash/attendence_view">🗓️ Attendance</Link>
           <Link to="/products">🛒 Products</Link>
           <Link to="/client_dash/client_qr">📷 QR Scan</Link>

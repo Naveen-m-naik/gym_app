@@ -16,6 +16,8 @@ import GymQR from './Gym/commonqr';
 import Sidebar from './Trainer_dash/trainer_main';
 import MyAttendance from './client_dash/attendece_view';
 import SendEmail from './payment/send_mail';
+import PaymentButton from './client_dash/payment';
+import TrainerAttendanceView from './Trainer_dash/attendence';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import './style/App.css'; // Make sure global CSS is imported
@@ -44,6 +46,8 @@ root.render(
         <Route path='/Trainer_dash/trainer_main' element={<Sidebar/>}/>
         <Route path='/client_dash/attendence_view' element={<MyAttendance/>}/>
         <Route path='/payment/send_mail' element={<SendEmail/>}/>
+        <Route path='/client_dash/payment' element={<PaymentButton/>}/>
+        <Route path="/Trainer_dash/attendence" element={<TrainerAttendanceView/>}/>
       </Routes>
     </BrowserRouter>
   </>

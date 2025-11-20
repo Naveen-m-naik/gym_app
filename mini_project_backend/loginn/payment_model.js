@@ -27,6 +27,16 @@ const paymentSchema = new mongoose.Schema({
   razorpayPaymentId: String,
   razorpaySignature: String,
 
+  // 🔥 NEW → Prevent double payment
+  month: {
+    type: Number,
+    required: true,
+  },
+  year: {
+    type: Number,
+    required: true,
+  }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Payment", paymentSchema);

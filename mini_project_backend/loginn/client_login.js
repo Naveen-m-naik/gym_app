@@ -1,44 +1,40 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("./client_model");
+const User = require("./client_model"); // your Mongoose user model
+require("dotenv").config();
 
 const router = express.Router();
 
-// POST /client_login
 router.post("/client_login", async (req, res) => {
-  const { username, password } = req.body;
-
   try {
-    // Check if user exists
-    const existUser = await User.findOne({ username });
-    if (!existUser) {
-      return res.status(400).json({ success: false, message: "User does not exist" });
+    const { username, password } = req.body || {}; // prevent destructure error
+
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: "Username & password required" });
     }
 
-    // Check if password is valid
-    const validPassword = await bcrypt.compare(password, existUser.password);
-    if (!validPassword) {
-      return res.status(400).json({ success: false, message: "Invalid password" });
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Generate JWT token
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid password" });
+    }
+
     const token = jwt.sign(
-      { id: existUser._id, username: existUser.username }, // payload
-      "mySecretKey",                                       // secret (use .env in production)
-      { expiresIn: "1h" }                                  // token valid for 1 hour
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET || "mySecretKey",
+      { expiresIn: "1h" }
     );
 
-    // ✅ Successful login response
-    res.json({
-      success: true,
-      token: token,
-      message: "Login successful"
-    });
+    res.json({ success: true, token, user });
 
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ success: false, message: "Server error during login" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 

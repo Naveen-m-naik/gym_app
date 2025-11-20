@@ -1,4 +1,4 @@
-// sendEmail.js
+// payment_mail.js
 const transporter = require("./mailer"); // shared nodemailer transporter
 require("dotenv").config();
 
