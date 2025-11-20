@@ -16,6 +16,8 @@ const specificAttendanceRoutes = require("./specific_user_attend");
 const paymentRoutes = require("./paymentroute");
 const sendTrainerEmail = require("./send_trainer_email");
 const atttend = require("./attendence")
+const total = require('./total_std')
+const main = require('./trainermain')
 
 require("./autoabsent");
 require("./autopaymentreminder");
@@ -44,6 +46,8 @@ server.use("/", forgotRoutes);
 server.use("/", homeRoutes);
 server.use("/", userAttendanceRoutes);
 server.use("/", specificAttendanceRoutes);
+server.use('/user',total);
+server.use('/dashboard',main)
 
 server.use('/attendence',authmiddle,atttend);
 server.use("/", authmiddle, clientFetchRoutes);

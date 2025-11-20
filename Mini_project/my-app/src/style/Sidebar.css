@@ -93,3 +93,10 @@
   padding: 6px 0;
   border-bottom: 1px solid #eee;
 }
+
+.motivational-quote {
+  font-style: italic;
+  color: #ff5722;
+  margin-top: 10px;
+  font-weight: 500;
+}
