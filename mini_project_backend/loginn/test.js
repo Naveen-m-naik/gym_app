@@ -1,63 +1,32 @@
 require("dotenv").config();
-const axios = require("axios");
+const mongoose = require("mongoose");
+const User = require("../client_model");
+const Workout = require("../workout_model");
+const exercises = require("../utils/workout_by_group"); // adjust path
 
-// -----------------------------
-// 🔹 Replace these with your own values
-// -----------------------------
-const token = "YOUR_NEW_VALID_JWT_TOKEN"; // Get this from login
-const userId = "USER_ID_FROM_DB";         // Replace with a real user ID
-const userEmail = "useremail@example.com"; // Email to receive payment confirmation
-const amount = 500;                         // Gym monthly fee
-// -----------------------------
-
-async function testPayment() {
+async function createTestWorkout() {
   try {
-    console.log("Creating order...");
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("✅ DB connected");
 
-    // 1️⃣ Create order
-    const orderRes = await axios.post(
-      "http://localhost:5000/payment/create-order",
-      { userId, amount },
-      { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
-    );
+    const user = await User.findOne();
+    if (!user) {
+      console.log("No users found in DB");
+      return;
+    }
 
-    const order = orderRes.data;
-    console.log("Order created successfully:", order);
+    const workoutData = exercises(user._id);
+    await Workout.create(workoutData);
 
-    // -----------------------------
-    // 2️⃣ Simulate Razorpay payment response (normally this comes from frontend)
-    // -----------------------------
-    const razorpayOrderId = order.id;
-    const razorpayPaymentId = "pay_test_1234567890"; // Fake Razorpay payment ID
-    const crypto = require("crypto");
-
-    const sign = razorpayOrderId + "|" + razorpayPaymentId;
-    const razorpaySignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_SECRET)
-      .update(sign)
-      .digest("hex");
-
-    console.log("Verifying payment...");
-
-    // 3️⃣ Verify payment
-    const verifyRes = await axios.post(
-      "http://localhost:5000/payment/verify-payment",
-      {
-        razorpayOrderId,
-        razorpayPaymentId,
-        razorpaySignature,
-        userEmail,
-        amount,
-      },
-      { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
-    );
-
-    console.log("Payment verification response:", verifyRes.data);
-
+    console.log("✅ Test workout created!");
+    process.exit(0);
   } catch (err) {
-    console.error("Error:", err.response?.data || err.message);
+    console.error(err);
+    process.exit(1);
   }
 }
 
-// Run the test
-testPayment();
+createTestWorkout();

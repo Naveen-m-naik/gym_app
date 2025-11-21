@@ -41,7 +41,7 @@ function Sidebar() {
           <Link to="/Trainer_dash/attendence" className="nav-link">📅 Attendance</Link>
           <Link to="/Trainer_dash/total_std" className="nav-link">👨‍🎓 Students</Link>
           <Link to="/payments" className="nav-link">💳 Payments</Link>
-          <Link to="/workout" className="nav-link">🏋️ Workout</Link>
+          <Link to="/Trainer_dash/workout" className="nav-link">🏋️ Workout</Link>
           <Link to="/diet" className="nav-link">🥗 Diet</Link>
           <Link to="/links" className="nav-link">🔗 Links</Link>
           <Link to="/payment/send_mail" className="nav-link">📧 Send Mail</Link>

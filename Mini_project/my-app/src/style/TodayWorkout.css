@@ -1,0 +1,66 @@
+.workout-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f4f8;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 2rem;
+}
+
+.muscle {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.muscle-biceps { color: #ff6b81; }
+.muscle-triceps { color: #ff9f43; }
+.muscle-chest { color: #54a0ff; }
+.muscle-back { color: #1dd1a1; }
+.muscle-legs { color: #f368e0; }
+
+.exercises-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.exercise-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.exercise-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.exercise-name {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.exercise-detail {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #333;
+}

@@ -40,7 +40,7 @@ function Home() {
           <Link to="/client_dash/attendence_view">🗓️ Attendance</Link>
           <Link to="/products">🛒 Products</Link>
           <Link to="/client_dash/client_qr">📷 QR Scan</Link>
-          <Link to="/routine">📅 Daily Routine</Link>
+          <Link to="/client_dash/workout">📅 Daily Routine</Link>
         </nav>
       </header>
 

@@ -18,7 +18,10 @@ const sendTrainerEmail = require("./send_trainer_email");
 const atttend = require("./attendence")
 const total = require('./total_std')
 const main = require('./trainermain')
+const workoutRoutes = require("./today_workout");
+const trainer_workout = require('./trainere_workout')
 
+// require("./daily_systematic_workout"); // Cron job to auto-assign daily workouts
 require("./autoabsent");
 require("./autopaymentreminder");
 
@@ -47,8 +50,11 @@ server.use("/", homeRoutes);
 server.use("/", userAttendanceRoutes);
 server.use("/", specificAttendanceRoutes);
 server.use('/user',total);
-server.use('/dashboard',main)
+server.use('/dashboard',main);
+server.use("/workout", workoutRoutes);
 
+server.use("/trainer", trainer_workout);
+// server.use("/workout", authmiddle, workoutRoutes);
 server.use('/attendence',authmiddle,atttend);
 server.use("/", authmiddle, clientFetchRoutes);
 server.use("/payment", authmiddle, paymentRoutes);

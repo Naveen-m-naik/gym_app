@@ -19,6 +19,8 @@ import SendEmail from './payment/send_mail';
 import PaymentButton from './client_dash/payment';
 import TrainerAttendanceView from './Trainer_dash/attendence';
 import UserList from './Trainer_dash/total_std';
+import TodayWorkout from './client_dash/workout';
+import TrainerWorkout from './Trainer_dash/workout';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import './style/App.css'; // Make sure global CSS is imported
@@ -50,6 +52,8 @@ root.render(
         <Route path='/client_dash/payment' element={<PaymentButton/>}/>
         <Route path="/Trainer_dash/attendence" element={<TrainerAttendanceView/>}/>
         <Route path='/Trainer_dash/total_std' element={<UserList/>}/>
+        <Route path='/client_dash/workout' element={<TodayWorkout/>}/>
+        <Route path='/Trainer_dash/workout' element={<TrainerWorkout/>}/>
       </Routes>
     </BrowserRouter>
   </>
