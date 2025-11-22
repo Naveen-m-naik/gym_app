@@ -1,133 +1,180 @@
-/* Trainer/Attendance Container */
-.trainer-container, .attendance-container {
-  max-width: 900px;
-  margin: 50px auto;
-  padding: 25px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Main Container */
+.trainer-main-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  color: white;
+  font-family: "Segoe UI", sans-serif;
 }
 
-/* Heading */
-.trainer-container h1, .attendance-container h2 {
+.main-title {
   text-align: center;
-  margin-bottom: 30px;
+  font-size: 40px;
+  margin-bottom: 25px;
   color: #ff6b6b;
-  font-size: 28px;
   letter-spacing: 1px;
+  font-weight: 700;
 }
 
-/* Filter Section */
-.filters {
+.big-search-box input {
+  width: 90%;
+  padding: 14px 20px;
+  font-size: 18px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Filters */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  color: #ffbcbc;
+  font-size: 14px;
+}
+.filter-item input {
+  padding: 10px 14px;
+  margin-top: 5px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: white;
+}
+
+/* Button */
+.search-btn {
+  display: block;
+  margin: 0 auto 30px auto;
+  padding: 12px 28px;
+  background: #ff6b6b;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 17px;
+  color: white;
+  transition: 0.3s;
+}
+.search-btn:hover {
+  background: #ff4c4c;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+}
+
+/* Compact Workout Cards */
+.workouts-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.compact-card {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.08);
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  transition: 0.3s;
+}
+
+.compact-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Left Section */
+.card-left {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.student-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff8c8c;
+}
+.student-username {
+  font-size: 14px;
+  color: #ddd;
+}
+.workout-date {
+  font-size: 13px;
+  color: #ffbcbc;
+  margin-top: 5px;
+}
+
+/* Right Section (Exercises) */
+.card-right {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
+  gap: 10px;
 }
-
-.filters input, .filters select {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.3);
-  font-size: 14px;
-  outline: none;
-  background: rgba(255,255,255,0.05);
-  color: #fff;
-  transition: 0.3s;
-}
-
-.filters input::placeholder {
-  color: rgba(255,255,255,0.7);
-}
-
-.filters input:focus, .filters select:focus {
-  border-color: #ff6b6b;
-  box-shadow: 0 0 8px rgba(255,107,107,0.4);
-}
-
-.filters button {
-  padding: 10px 20px;
-  background-color: #ff6b6b;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.filters button:hover {
-  background-color: #ff4c4c;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-/* Table Style */
-.workout-table, .attendance-table {
-  width: 100%;
-  border-collapse: collapse;
+.exercise-compact {
+  background: rgba(255,255,255,0.12);
+  padding: 8px 10px;
   border-radius: 10px;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+}
+.ex-name {
+  color: #ff7676;
+  font-weight: 600;
+}
+.ex-detail {
+  font-size: 12px;
+  color: #fff;
 }
 
-.workout-table th, .attendance-table th,
-.workout-table td, .attendance-table td {
-  padding: 12px 15px;
+/* Section Heading */
+.section-heading {
+  margin: 20px 0;
+  font-size: 28px;
   text-align: center;
-  font-size: 14px;
+  color: #ff6b6b;
+}
+
+/* Messages */
+.loading-text,
+.no-data {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+/* Scrollbar for many students */
+.workouts-compact::-webkit-scrollbar {
+  width: 8px;
+}
+.workouts-compact::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius: 5px;
+}
+
+/* Clear Button */
+.clear-btn {
+  padding: 12px 28px;
+  background-color: #6c757d; /* Grey for distinction */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 17px;
   color: #fff;
-}
-
-.workout-table th, .attendance-table th {
-  background: #ff6b6b;
-  font-size: 15px;
-  text-transform: uppercase;
-}
-
-.workout-table tbody tr:nth-child(even), .attendance-table tr:nth-child(even) {
-  background: rgba(255,255,255,0.05);
-}
-
-.workout-table tbody tr:hover, .attendance-table tr:hover {
-  background: rgba(255,107,107,0.2);
   transition: 0.3s;
 }
 
-/* Status Indicators */
-.status-present {
-  color: #4caf50;
-  font-weight: bold;
-}
-
-.status-absent {
-  color: #f44336;
-  font-weight: bold;
-}
-
-/* Exercise Card (Optional) */
-.exercise-card {
-  background: rgba(255,255,255,0.05);
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .filters {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .workout-table th, .workout-table td,
-  .attendance-table th, .attendance-table td {
-    padding: 10px;
-    font-size: 13px;
-  }
+.clear-btn:hover {
+  background-color: #5a6268;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.35);
 }
