@@ -21,6 +21,7 @@ import TrainerAttendanceView from './Trainer_dash/attendence';
 import UserList from './Trainer_dash/total_std';
 import TodayWorkout from './client_dash/workout';
 import TrainerWorkout from './Trainer_dash/workout';
+import GymStoreLink from './client_dash/product';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import './style/App.css'; // Make sure global CSS is imported
@@ -54,6 +55,7 @@ root.render(
         <Route path='/Trainer_dash/total_std' element={<UserList/>}/>
         <Route path='/client_dash/workout' element={<TodayWorkout/>}/>
         <Route path='/Trainer_dash/workout' element={<TrainerWorkout/>}/>
+        <Route path='/client_dash/product' element={<GymStoreLink/>}/>
       </Routes>
     </BrowserRouter>
   </>
