@@ -22,6 +22,7 @@ const workoutRoutes = require("./today_workout");
 const trainer_workout = require('./trainere_workout')
 
 // require("./daily_systematic_workout"); // Cron job to auto-assign daily workouts
+require("./today_workout"); // This starts the cron job
 require("./autoabsent");
 require("./autopaymentreminder");
 

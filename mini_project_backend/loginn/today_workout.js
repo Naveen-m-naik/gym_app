@@ -1,10 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const Workout = require("./workout");
-const User = require("./client_model"); // Your user model
-const authmiddle = require("./authmiddle");
+const cron = require("node-cron");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-// Exercises grouped by muscle
+const Workout = require("./workout");
+const User = require("./client_model");
+
+// Exercises pool and muscles (use your existing setup)
 const exercisesPool = {
   Biceps: [
     { name: "Bicep Curls", reps: 12, sets: 3 },
@@ -50,7 +51,7 @@ const exercisesPool = {
 
 const muscles = ["Biceps", "Triceps", "Chest", "Back", "Legs"];
 
-// Pick one random exercise from pool avoiding last week
+// Pick one random exercise avoiding last week
 function pickExercise(pool, excluded) {
   const filtered = pool.filter((ex) => !excluded.includes(ex.name));
   if (filtered.length === 0) return null;
@@ -58,55 +59,57 @@ function pickExercise(pool, excluded) {
   return shuffled[0];
 }
 
-// Route: GET /workout/today
-router.get("/today", authmiddle, async (req, res) => {
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ DB connected for cron"))
+  .catch((err) => console.error(err));
+
+// Cron job: run every day at 00:01
+cron.schedule("1 0 * * *", async () => {
+  console.log("🔄 Generating daily workouts...");
+
   try {
-    const clientId = req.user.id;
+    const users = await User.find({}).sort({ _id: 1 });
     const today = new Date().toISOString().split("T")[0];
 
-    // 1️⃣ Check if workout already exists
-    let workout = await Workout.findOne({ clientId, date: today });
-    if (workout) return res.json(workout);
+    for (const [userIndex, user] of users.entries()) {
+      const exists = await Workout.findOne({ clientId: user._id, date: today });
+      if (exists) continue; // Skip if already exists
 
-    // 2️⃣ Get all users to assign muscles differently
-    const users = await User.find({}, "_id").sort({ _id: 1 }); // sorted list
-    const userIndex = users.findIndex((u) => u._id.toString() === clientId);
-    const todayOffset = new Date().getDate(); // rotate daily
+      // Muscle rotation
+      const todayOffset = new Date().getDate();
+      const muscleIndex = (userIndex + todayOffset) % muscles.length;
+      const muscleOfTheDay = muscles[muscleIndex];
 
-    // Assign muscle based on user index + day offset
-    const muscleIndex = (userIndex + todayOffset) % muscles.length;
-    const muscleOfTheDay = muscles[muscleIndex];
+      // Last 7 days exercises
+      const lastWeek = new Date();
+      lastWeek.setDate(lastWeek.getDate() - 7);
+      const lastWeekWorkouts = await Workout.find({
+        clientId: user._id,
+        date: { $gte: lastWeek.toISOString().split("T")[0] },
+      });
 
-    // 3️⃣ Get last 7 days exercises for this user
-    const lastWeek = new Date();
-    lastWeek.setDate(lastWeek.getDate() - 7);
-    const lastWeekWorkouts = await Workout.find({
-      clientId,
-      date: { $gte: lastWeek.toISOString().split("T")[0] },
-    });
+      const usedExercises = [];
+      lastWeekWorkouts.forEach((w) => w.exercises.forEach((ex) => usedExercises.push(ex.name)));
 
-    const usedExercises = [];
-    lastWeekWorkouts.forEach((w) => w.exercises.forEach((ex) => usedExercises.push(ex.name)));
+      // Pick 5 exercises
+      const exercises = [];
+      const pool = exercisesPool[muscleOfTheDay];
+      while (exercises.length < 5) {
+        const ex = pickExercise(pool, usedExercises);
+        if (!ex) break;
+        exercises.push(ex);
+        usedExercises.push(ex.name);
+      }
 
-    // 4️⃣ Pick 5 exercises for the assigned muscle avoiding repeats
-    const exercises = [];
-    const pool = exercisesPool[muscleOfTheDay];
-    while (exercises.length < 5) {
-      const ex = pickExercise(pool, usedExercises);
-      if (!ex) break; // all exercises used last week
-      exercises.push(ex);
-      usedExercises.push(ex.name);
+      // Save workout
+      const workout = new Workout({ clientId: user._id, date: today, exercises });
+      await workout.save();
     }
 
-    // 5️⃣ Save workout
-    workout = new Workout({ clientId, date: today, exercises });
-    await workout.save();
-
-    res.json(workout);
+    console.log("✅ Daily workouts generated for all users!");
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    console.error("❌ Error generating workouts:", err);
   }
 });
-
-module.exports = router;
