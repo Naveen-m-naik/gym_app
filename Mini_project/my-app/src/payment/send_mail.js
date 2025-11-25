@@ -1,34 +1,35 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // for navigation
+import { useNavigate } from "react-router-dom";
 import "../style/SendEmail.css";
 
-
 function SendEmail() {
-  const navigate = useNavigate(); // hook for navigation
+  const navigate = useNavigate();
+
   const [emailData, setEmailData] = useState({
     to: "",
     subject: "",
     message: "",
   });
 
-  const [status, setStatus] = useState(""); // status message
+  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false); // loading state
 
   const handleChange = (e) => {
     setEmailData({ ...emailData, [e.target.name]: e.target.value });
   };
 
   const handleSendEmail = async () => {
-    // Simple validation
     if (!emailData.to || !emailData.subject || !emailData.message) {
-      setStatus("Please fill in all fields");
+      setStatus("❗ Please fill in all fields");
       return;
     }
 
-    console.log("DEBUG: Sending email data:", emailData);
+    setStatus("Sending...");
+    setLoading(true);
 
     try {
-      const token = localStorage.getItem("token"); // JWT token if required
+      const token = localStorage.getItem("token");
 
       const response = await axios.post(
         "http://localhost:5000/email/send-trainer-email",
@@ -40,28 +41,25 @@ function SendEmail() {
         }
       );
 
-      console.log("DEBUG: Response from backend:", response.data);
-      setStatus("Email sent successfully!");
+      setStatus("✅ Email sent successfully!");
     } catch (err) {
-      console.error(
-        "DEBUG: Error response:",
-        err.response?.data || err.message
-      );
+      console.error("Error:", err.response?.data || err.message);
 
       if (err.response?.status === 401) {
-        setStatus("Unauthorized. Please login first.");
+        setStatus("❌ Unauthorized. Please login again.");
       } else {
-        setStatus(
-          err.response?.data?.message || "Error sending email. Check console."
-        );
+        setStatus(err.response?.data?.message || "❌ Failed to send email.");
       }
     }
+
+    setLoading(false);
   };
 
   return (
     <div className="email-container">
       <div className="email-card">
         <h2>Send Email</h2>
+
         <input
           type="email"
           name="to"
@@ -69,6 +67,7 @@ function SendEmail() {
           value={emailData.to}
           onChange={handleChange}
         />
+
         <input
           type="text"
           name="subject"
@@ -76,16 +75,39 @@ function SendEmail() {
           value={emailData.subject}
           onChange={handleChange}
         />
+
         <textarea
           name="message"
           placeholder="Message"
           value={emailData.message}
           onChange={handleChange}
         />
-        <button onClick={handleSendEmail}>Send Email</button>
-        {status && <p style={{ marginTop: "10px", color: "green" }}>{status}</p>}
 
-        {/* Home button to navigate back */}
+        {/* SEND BUTTON */}
+        <button
+          onClick={handleSendEmail}
+          disabled={loading}
+          style={{
+            opacity: loading ? 0.6 : 1,
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
+        >
+          {loading ? "Sending..." : "Send Email"}
+        </button>
+
+        {/* STATUS MESSAGE */}
+        {status && (
+          <p
+            style={{
+              marginTop: "10px",
+              color: status.includes("❌") ? "red" : status.includes("Sending") ? "blue" : "green",
+            }}
+          >
+            {status}
+          </p>
+        )}
+
+        {/* HOME BUTTON */}
         <button
           style={{
             marginTop: "20px",
@@ -100,7 +122,7 @@ function SendEmail() {
             fontWeight: "500",
             transition: "background 0.3s ease, transform 0.2s ease",
           }}
-          onClick={() => navigate("/Trainer_dash/trainer_main")} // change path if needed
+          onClick={() => navigate("/Trainer_dash/trainer_main")}
         >
           Go to Home
         </button>

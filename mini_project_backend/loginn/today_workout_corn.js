@@ -5,7 +5,9 @@ require("dotenv").config();
 const Workout = require("./workout");
 const User = require("./client_model");
 
-// Exercises pool and muscles (use your existing setup)
+// -------------------------
+//   Exercise Pool
+// -------------------------
 const exercisesPool = {
   Biceps: [
     { name: "Bicep Curls", reps: 12, sets: 3 },
@@ -51,51 +53,60 @@ const exercisesPool = {
 
 const muscles = ["Biceps", "Triceps", "Chest", "Back", "Legs"];
 
-// Pick one random exercise avoiding last week
+// --------------------------------------------
+// Pick random exercise avoiding last 7 days
+// --------------------------------------------
 function pickExercise(pool, excluded) {
   const filtered = pool.filter((ex) => !excluded.includes(ex.name));
-  if (filtered.length === 0) return null;
-  const shuffled = filtered.sort(() => 0.5 - Math.random());
-  return shuffled[0];
+  if (filtered.length === 0) return null; // nothing left
+  return filtered[Math.floor(Math.random() * filtered.length)];
 }
 
-// Connect to MongoDB
+// --------------------------------------------
+// Connect to MongoDB ONCE for cron
+// --------------------------------------------
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ DB connected for cron"))
-  .catch((err) => console.error(err));
+  .then(() => console.log("✅ Cron DB connected"))
+  .catch((err) => console.error("❌ Cron DB error:", err));
 
-// Cron job: run every day at 00:01
-cron.schedule("1 0 * * *", async () => {
-  console.log("🔄 Generating daily workouts...");
+// --------------------------------------------
+// Run cron daily at 6:00 AM
+// --------------------------------------------
+cron.schedule("0 6 * * *", async () => {
+  console.log("🔄 Running 6 AM cron: Generating workouts...");
 
   try {
     const users = await User.find({}).sort({ _id: 1 });
     const today = new Date().toISOString().split("T")[0];
 
-    for (const [userIndex, user] of users.entries()) {
-      const exists = await Workout.findOne({ clientId: user._id, date: today });
-      if (exists) continue; // Skip if already exists
+    for (const [index, user] of users.entries()) {
+      // Skip if workout already exists
+      const existing = await Workout.findOne({ clientId: user._id, date: today });
+      if (existing) continue;
 
-      // Muscle rotation
-      const todayOffset = new Date().getDate();
-      const muscleIndex = (userIndex + todayOffset) % muscles.length;
-      const muscleOfTheDay = muscles[muscleIndex];
+      // Rotate muscles based on user index + date
+      const day = new Date().getDate();
+      const muscleIndex = (index + day) % muscles.length;
+      const muscleOfDay = muscles[muscleIndex];
 
-      // Last 7 days exercises
+      // Fetch last 7 days data
       const lastWeek = new Date();
       lastWeek.setDate(lastWeek.getDate() - 7);
+
       const lastWeekWorkouts = await Workout.find({
         clientId: user._id,
         date: { $gte: lastWeek.toISOString().split("T")[0] },
       });
 
-      const usedExercises = [];
-      lastWeekWorkouts.forEach((w) => w.exercises.forEach((ex) => usedExercises.push(ex.name)));
+      const usedExercises = lastWeekWorkouts.flatMap((w) =>
+        w.exercises.map((e) => e.name)
+      );
 
-      // Pick 5 exercises
+      // Generate 5 exercises
       const exercises = [];
-      const pool = exercisesPool[muscleOfTheDay];
+      const pool = exercisesPool[muscleOfDay];
+
       while (exercises.length < 5) {
         const ex = pickExercise(pool, usedExercises);
         if (!ex) break;
@@ -104,11 +115,14 @@ cron.schedule("1 0 * * *", async () => {
       }
 
       // Save workout
-      const workout = new Workout({ clientId: user._id, date: today, exercises });
-      await workout.save();
+      await new Workout({
+        clientId: user._id,
+        date: today,
+        exercises,
+      }).save();
     }
 
-    console.log("✅ Daily workouts generated for all users!");
+    console.log("✅ All workouts generated successfully at 6 AM!");
   } catch (err) {
     console.error("❌ Error generating workouts:", err);
   }
