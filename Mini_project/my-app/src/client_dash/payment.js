@@ -13,7 +13,7 @@ function PaymentButton({ user }) {
       const order = orderRes.data;
 
       const options = {
-        key: "rzp_test_1234567890abcdef", // Replace with your key
+        key:  process.env.SECRET_KEY, // Replace with your key
         amount: order.amount,
         currency: "INR",
         name: "Gym Monthly Payment",
