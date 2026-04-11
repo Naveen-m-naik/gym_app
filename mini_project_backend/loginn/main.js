@@ -25,6 +25,9 @@ const trainer_workout = require('./trainere_workout')
 require("./today_workout_corn"); // This starts the cron job
 require("./autoabsent");
 require("./autopaymentreminder");
+const workoutRoutes = require("./workout_routes");
+
+
 
 const server = express();
 
@@ -60,6 +63,7 @@ server.use('/attendence',authmiddle,atttend);
 server.use("/", authmiddle, clientFetchRoutes);
 server.use("/payment", authmiddle, paymentRoutes);
 server.use("/email", authmiddle, sendTrainerEmail);
+server.use("/", workoutRoutes);
 
 server.get("/", (req, res) => {
   res.send("✅ Backend is running!");

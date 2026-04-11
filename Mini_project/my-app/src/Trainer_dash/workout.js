@@ -23,22 +23,20 @@ function TrainerWorkout() {
       setWorkouts(res.data);
       setLoading(false);
     } catch (err) {
-      console.log("Error fetching workouts:", err);
+      console.log(err);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchWorkouts(); // Load today's workouts on first render
+    fetchWorkouts(); // today on load
   }, []);
 
   const handleSearch = () => {
     const params = {};
     if (searchText) params.username = searchText;
-    if (fromDate && toDate) {
-      params.from = fromDate;
-      params.to = toDate;
-    }
+    if (fromDate) params.from = fromDate;
+    if (toDate) params.to = toDate;
     fetchWorkouts(params);
   };
 
@@ -46,74 +44,70 @@ function TrainerWorkout() {
     setSearchText("");
     setFromDate("");
     setToDate("");
-    fetchWorkouts(); // Reload today's workouts
+    fetchWorkouts();
   };
 
   return (
-    <div className="trainer-main-container">
-      <h1 className="main-title">Trainer Workout Dashboard</h1>
+    <div className="trainer-page">
 
-      {/* Big Search Bar */}
-      <div className="big-search-box">
+      {/* TITLE */}
+      <h1 className="title">🏋️ Trainer Workout Dashboard</h1>
+
+      {/* SEARCH BAR */}
+      <div className="search-section">
         <input
           type="text"
           placeholder="Search by username..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
+        <button onClick={handleSearch}>Search</button>
+        <button className="clear" onClick={handleClear}>Clear</button>
       </div>
 
-      {/* Filters */}
-      <div className="filter-container">
-        <div className="filter-item">
-          <label>From Date</label>
-          <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
-        </div>
-        <div className="filter-item">
-          <label>To Date</label>
-          <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
-        </div>
+      {/* DATE FILTER */}
+      <div className="date-section">
+        <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+        <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
       </div>
 
-      {/* Buttons */}
-      <div style={{ textAlign: "center", marginBottom: "30px" }}>
-        <button className="search-btn" onClick={handleSearch}>Search Workouts</button>
-        <button
-          className="clear-btn"
-          onClick={handleClear}
-          style={{ marginLeft: "15px", backgroundColor: "#6c757d" }}
-        >
-          Clear
-        </button>
+      {/* TABLE */}
+      <div className="table-container">
+        {loading ? (
+          <p>Loading...</p>
+        ) : workouts.length === 0 ? (
+          <p>No workouts found</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Date</th>
+                <th>Exercises</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {workouts.map((w) => (
+                <tr key={w._id}>
+                  <td>{w.clientId?.name}</td>
+                  <td>{w.clientId?.username}</td>
+                  <td>{w.date}</td>
+                  <td>
+                    {w.exercises.map((ex, i) => (
+                      <div key={i}>
+                        {ex.name} -{" "}
+                        {ex.reps ? `${ex.reps}x${ex.sets}` : `${ex.duration}s`}
+                      </div>
+                    ))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
-
-      <h2 className="section-heading">Today's Workouts</h2>
-
-      {loading ? (
-        <p className="loading-text">Loading workouts...</p>
-      ) : workouts.length === 0 ? (
-        <p className="no-data">No workouts found</p>
-      ) : (
-        <div className="workouts-compact">
-          {workouts.map((w) => (
-            <div key={w._id} className="compact-card">
-              <div className="card-left">
-                <div className="student-name">{w.clientId?.name}</div>
-                <div className="student-username">@{w.clientId?.username}</div>
-                <div className="workout-date">{w.date}</div>
-              </div>
-              <div className="card-right">
-                {w.exercises.map((ex) => (
-                  <div key={ex._id} className="exercise-compact">
-                    <span className="ex-name">{ex.name}</span>
-                    <span className="ex-detail">{ex.reps ? `${ex.reps}×${ex.sets}` : `${ex.duration}s`}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
