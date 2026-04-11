@@ -18,7 +18,7 @@ function UserForm() {
     place: "",
     username: "",
     password: "",
-    registeredAt: new Date().toISOString(), // ✅ store registration date & time
+    registeredAt: new Date().toISOString(),
   });
 
   const handleChange = (e) => {
@@ -32,20 +32,73 @@ function UserForm() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    // ✅ Name
+    if (!formData.name.trim()) {
+      toast.error("👤 Name is required!");
+      return;
+    }
+
+    // ✅ Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("📧 Enter valid email!");
+      return;
+    }
+
+    // ✅ Phone
+    if (!/^\d{10}$/.test(formData.phone)) {
+      toast.error("📞 Phone must be 10 digits!");
+      return;
+    }
+
+    // ✅ Weight
+    if (formData.weight && formData.weight <= 0) {
+      toast.error("⚖️ Enter valid weight!");
+      return;
+    }
+
+    // ✅ Height
+    if (formData.height && formData.height <= 0) {
+      toast.error("📏 Enter valid height!");
+      return;
+    }
+
+    // ✅ Gender
+    if (!formData.gender) {
+      toast.error("⚧️ Please select gender!");
+      return;
+    }
+
+    // ✅ Place
+    if (!formData.place.trim()) {
+      toast.error("📍 Place is required!");
+      return;
+    }
+
+    // ✅ Username
+    if (formData.username.length < 4) {
+      toast.error("👤 Username must be at least 4 characters!");
+      return;
+    }
+
+    // ✅ Password (strong)
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      toast.error("🔒 Password must contain letters & numbers (min 6 chars)!");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "http://localhost:5000/client_information",
         {
           ...formData,
-          registeredAt: new Date().toISOString(), // ✅ send fresh timestamp on submit
+          registeredAt: new Date().toISOString(),
         }
       );
 
-      toast.success(res.data.message || "✅ Signup successful", {
-        autoClose: 3000,
-      });
+      toast.success(res.data.message || "✅ Signup successful");
 
-      // reset form
       setFormData({
         name: "",
         email: "",
@@ -60,10 +113,9 @@ function UserForm() {
       });
 
       navigate("/login/client");
+
     } catch (err) {
-      toast.error(err.response?.data?.err || "❌ Signup failed", {
-        autoClose: 3000,
-      });
+      toast.error(err.response?.data?.err || "❌ Signup failed");
     }
   }
 
@@ -76,6 +128,7 @@ function UserForm() {
           <h2>Client Signup</h2>
 
           <h3>Personal Details</h3>
+
           <input
             type="text"
             name="name"
@@ -143,29 +196,26 @@ function UserForm() {
           />
 
           <h3>Login Credentials</h3>
+
           <input
             type="text"
             name="username"
-            placeholder="Choose a username (for login)"
+            placeholder="Choose username"
             value={formData.username}
             onChange={handleChange}
             required
-            autoComplete="new-username"
           />
-          <small>This will be your login username.</small>
 
           <input
             type="password"
             name="password"
-            placeholder="Create a strong password"
+            placeholder="Strong password"
             value={formData.password}
             onChange={handleChange}
             required
-            autoComplete="new-password"
           />
-          <small>You’ll use this password when logging in.</small>
 
-          {/* ✅ Show registration date & time */}
+          {/* Registration Time */}
           <div className="registration-time">
             <label>Registration Date & Time:</label>
             <p>{new Date(formData.registeredAt).toLocaleString()}</p>
