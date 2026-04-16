@@ -16,12 +16,14 @@ import GymQR from './Gym/commonqr';
 import Sidebar from './Trainer_dash/trainer_main';
 import MyAttendance from './client_dash/attendece_view';
 import SendEmail from './payment/send_mail';
-import PaymentButton from './client_dash/payment';
+import PaymentButton from './client_dash/payment1';
 import TrainerAttendanceView from './Trainer_dash/attendence';
 import UserList from './Trainer_dash/total_std';
 import TodayWorkout from './client_dash/workout';
 import TrainerWorkout from './Trainer_dash/workout';
 import GymStoreLink from './client_dash/product';
+import TrainerPayments from './Trainer_dash/payment';
+
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import './style/App.css'; // Make sure global CSS is imported
@@ -50,12 +52,13 @@ root.render(
         <Route path='/Trainer_dash/trainer_main' element={<Sidebar/>}/>
         <Route path='/client_dash/attendence_view' element={<MyAttendance/>}/>
         <Route path='/payment/send_mail' element={<SendEmail/>}/>
-        <Route path='/client_dash/payment' element={<PaymentButton/>}/>
+        <Route path='/client_dash/payment1' element={<PaymentButton/>}/>
         <Route path="/Trainer_dash/attendence" element={<TrainerAttendanceView/>}/>
         <Route path='/Trainer_dash/total_std' element={<UserList/>}/>
         <Route path='/client_dash/workout' element={<TodayWorkout/>}/>
         <Route path='/Trainer_dash/workout' element={<TrainerWorkout/>}/>
         <Route path='/client_dash/product' element={<GymStoreLink/>}/>
+        <Route path="/Trainer_dash/payment" element={<TrainerPayments />} />
       </Routes>
     </BrowserRouter>
   </>

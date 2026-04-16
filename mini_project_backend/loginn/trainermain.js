@@ -1,39 +1,46 @@
 const express = require("express");
 const router = express.Router();
-const User = require("./client_model"); // your existing User model
-const Attendance = require("./attendence_mod"); // your Attendance model
-const Payment = require("./payment_model"); // Payment model
 
-// GET /dashboard/stats → return total students, today's attendance, pending payments
+const User = require("./client_model");
+const Attendance = require("./attendence_mod");
+const Payment = require("./payment_model");
+
+/* ================= DASHBOARD STATS ================= */
 router.get("/stats", async (req, res) => {
   try {
-    // 1️⃣ Total students
+    const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD
+
+    // ✅ TOTAL STUDENTS (YOU DON'T HAVE ROLE FIELD)
     const totalStudents = await User.countDocuments();
 
-    // 2️⃣ Today's attendance (timezone-safe)
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    const todayStr = `${yyyy}-${mm}-${dd}`; // e.g., "2025-11-20"
-
+    // ✅ TODAY ATTENDANCE
     const todayAttendance = await Attendance.countDocuments({
-      date: todayStr,
+      date: today,
       status: "Present",
     });
 
-    // 3️⃣ Pending payments
-    const pendingPayments = await Payment.countDocuments({ status: "pending" });
+    // ✅ UNIQUE USERS WITH PENDING PAYMENT
+    const pendingUsers = await Payment.find({
+      status: "pending",
+    }).distinct("userId");
 
-    // Return JSON
+    const pendingPayments = pendingUsers.length;
+
+    console.log("📊 FINAL STATS:", {
+      totalStudents,
+      todayAttendance,
+      pendingPayments,
+      today,
+    });
+
     res.json({
       totalStudents,
       todayAttendance,
       pendingPayments,
     });
   } catch (err) {
-    console.error("Error fetching dashboard stats:", err);
-    res.status(500).json({ error: "Server error" });
+    console.error("❌ Stats error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

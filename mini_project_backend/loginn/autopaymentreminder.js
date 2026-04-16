@@ -1,34 +1,40 @@
-// autopaymentreminder.js
 const cron = require("node-cron");
 const Payment = require("./payment_model");
 const User = require("./client_model");
-const sendEmail = require("./payment_mail"); // ✅ Reusable email function
+const sendEmail = require("./payment_mail");
 
-// Run every day at 10:00 AM
-cron.schedule("0 10 * * *", async () => {
-  console.log("Checking pending payments...");
+// Run every 1st of month
+cron.schedule("0 9 1 * *", async () => {
+  console.log("Running monthly payment system...");
 
-  try {
-    // Get all pending payments with user details
-    const pendingPayments = await Payment.find({ status: "pending" }).populate("userId");
+  const month = new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
 
-    for (const payment of pendingPayments) {
-      const user = payment.userId;
-      if (!user || !user.email) continue; // skip if no valid email
+  const users = await User.find({ role: "client" });
 
-      const subject = "Gym Monthly Payment Pending";
-      const text = `Dear ${user.username},\n\nYour monthly gym payment is still pending. Please pay as soon as possible.\n\nThank you!`;
+  for (const user of users) {
+    const existing = await Payment.findOne({
+      userId: user._id,
+      month,
+      year,
+    });
 
-      try {
-        await sendEmail(user.email, subject, text);
-        console.log("Reminder sent to", user.email);
-      } catch (err) {
-        console.error("Error sending payment reminder to", user.email, err);
-      }
+    if (!existing) {
+      await Payment.create({
+        userId: user._id,
+        amount: 500,
+        month,
+        year,
+        status: "pending",
+      });
     }
 
-    console.log("All pending payment emails processed.");
-  } catch (err) {
-    console.error("Error fetching pending payments:", err);
+    if (user.email) {
+      await sendEmail(
+        user.email,
+        "Gym Payment Reminder",
+        `Hi ${user.username}, please pay your monthly fee.`
+      );
+    }
   }
 });

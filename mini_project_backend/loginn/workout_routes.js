@@ -8,7 +8,7 @@ const authMiddleware = require("./authmiddle");
 /* ===============================
    CLIENT: TODAY WORKOUT
 ================================ */
-router.get("/workout/today", authMiddleware, async (req, res) => {
+router.get("/today", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
     const today = new Date().toISOString().split("T")[0];
@@ -27,25 +27,21 @@ router.get("/workout/today", authMiddleware, async (req, res) => {
 
 /* ===============================
    TRAINER: WORKOUT DASHBOARD
-   - default → today only
-   - username filter → history
-   - date range filter → from/to
 ================================ */
-router.get("/trainer/workouts", authMiddleware, async (req, res) => {
+router.get("/workouts", authMiddleware, async (req, res) => {
   try {
     const { username, from, to } = req.query;
 
     let filter = {};
-
     const isDefault = !username && !from && !to;
 
-    // ✅ 1. DEFAULT → TODAY ONLY
+    // ✅ DEFAULT → TODAY ONLY
     if (isDefault) {
       const today = new Date().toISOString().split("T")[0];
       filter.date = today;
     }
 
-    // ✅ 2. USER FILTER
+    // ✅ FILTER BY USERNAME
     if (username) {
       const user = await User.findOne({ username });
 
@@ -56,10 +52,9 @@ router.get("/trainer/workouts", authMiddleware, async (req, res) => {
       filter.clientId = user._id;
     }
 
-    // ✅ 3. FETCH WORKOUTS
     let workouts = await Workout.find(filter).sort({ date: -1 });
 
-    // attach user info
+    // ✅ ATTACH USER INFO
     const data = await Promise.all(
       workouts.map(async (w) => {
         const user = await User.findById(w.clientId).select(
@@ -73,7 +68,7 @@ router.get("/trainer/workouts", authMiddleware, async (req, res) => {
       })
     );
 
-    // ✅ 4. DATE RANGE FILTER
+    // ✅ DATE RANGE FILTER
     if (from && to) {
       const fromDate = new Date(from).getTime();
       const toDate = new Date(to);

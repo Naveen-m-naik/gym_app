@@ -1,103 +1,74 @@
 require("dotenv").config();
 const express = require("express");
-const Razorpay = require("razorpay");
+const router = express.Router();
 const Payment = require("./payment_model");
-const crypto = require("crypto");
-const transporter = require("./mailer");
 const authmiddle = require("./authmiddle");
 
-const router = express.Router();
-
-// Razorpay instance
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_SECRET,
-});
-
-// CREATE ORDER (PREVENT DOUBLE PAYMENT)
-router.post("/create-order", authmiddle, async (req, res) => {
+// ✅ FAKE PAYMENT (no Razorpay needed)
+router.post("/pay", authmiddle, async (req, res) => {
   try {
-    const { userId, amount } = req.body;
-    if (!userId || !amount || amount <= 0) {
-      return res.status(400).json({ error: "Invalid userId or amount" });
-    }
+    const userId = req.user.id;
+    const { amount } = req.body;
 
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
 
-    const existingPayment = await Payment.findOne({
+    // ❌ Prevent double payment
+    const existing = await Payment.findOne({
       userId,
-      month: currentMonth,
-      year: currentYear,
+      month,
+      year,
       status: "paid",
     });
 
-    if (existingPayment) {
-      return res.status(400).json({ error: "Payment already completed for this month" });
-    }
-
-    const options = { amount: amount * 100, currency: "INR", receipt: "receipt_" + Date.now() };
-    const order = await razorpay.orders.create(options);
-
-    const payment = new Payment({
-      userId,
-      amount,
-      razorpayOrderId: order.id,
-      status: "pending",
-      month: currentMonth,
-      year: currentYear,
-    });
-
-    await payment.save();
-    res.json(order);
-  } catch (err) {
-    console.error("Create order error:", err);
-    res.status(500).json({ error: "Server error while creating order" });
-  }
-});
-
-// VERIFY PAYMENT
-router.post("/verify-payment", authmiddle, async (req, res) => {
-  try {
-    const { razorpayOrderId, razorpayPaymentId, razorpaySignature, userEmail, amount } = req.body;
-    if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
-      return res.status(400).json({ error: "Missing required Razorpay fields" });
-    }
-
-    const sign = razorpayOrderId + "|" + razorpayPaymentId;
-    const expectedSign = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET)
-      .update(sign).digest("hex");
-
-    if (expectedSign !== razorpaySignature) {
-      return res.status(400).json({ success: false, message: "Invalid Razorpay signature" });
+    if (existing) {
+      return res.status(400).json({ msg: "Already paid this month" });
     }
 
     const payment = await Payment.findOneAndUpdate(
-      { razorpayOrderId },
-      { status: "paid", razorpayPaymentId, razorpaySignature },
-      { new: true }
+      { userId, month, year },
+      {
+        userId,
+        amount,
+        month,
+        year,
+        status: "paid",
+        paymentId: "fake_" + Date.now(),
+      },
+      { upsert: true, new: true }
     );
 
-    if (!payment) return res.status(404).json({ error: "Payment record not found" });
-
-    if (userEmail) {
-      try {
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: userEmail,
-          subject: "Payment Successful",
-          text: `Your payment of ₹${amount} has been received successfully.`,
-        });
-      } catch (emailErr) {
-        console.error("Error sending payment email:", emailErr);
-      }
-    }
-
-    res.json({ success: true, message: "Payment verified successfully" });
+    res.json({ msg: "Payment successful", payment });
   } catch (err) {
-    console.error("Verify payment error:", err);
-    res.status(500).json({ error: "Server error while verifying payment" });
+    res.status(500).json({ msg: "Server error" });
   }
+});
+
+// ✅ USER: My payments
+router.get("/my", authmiddle, async (req, res) => {
+  const payments = await Payment.find({ userId: req.user.id }).sort({ createdAt: -1 });
+  res.json(payments);
+});
+
+// ✅ TRAINER: All payments
+router.get("/all", authmiddle, async (req, res) => {
+  const payments = await Payment.find().populate("userId", "username email");
+  res.json(payments);
+});
+
+// ✅ TRAINER: Stats
+router.get("/stats", authmiddle, async (req, res) => {
+  const month = new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
+
+  const total = await Payment.countDocuments({ month, year });
+  const paid = await Payment.countDocuments({ month, year, status: "paid" });
+
+  res.json({
+    totalUsers: total,
+    paidUsers: paid,
+    pendingUsers: total - paid,
+  });
 });
 
 module.exports = router;

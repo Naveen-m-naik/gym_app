@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+/* ================= AXIOS INSTANCE ================= */
+const API = axios.create({
+  baseURL: "http://localhost:5000",
+});
+
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
+});
+
 function UserList() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -9,9 +22,10 @@ function UserList() {
   /* ================= FETCH ALL USERS ================= */
   const fetchAll = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/user/view");
+      const res = await API.get("/user/view");
       setUsers(res.data);
     } catch (err) {
+      console.error(err);
       alert("Failed to fetch users");
     }
   };
@@ -21,12 +35,10 @@ function UserList() {
     try {
       if (!search) return fetchAll();
 
-      const res = await axios.get(
-        `http://localhost:5000/user/search?name=${search}`
-      );
-
+      const res = await API.get(`/user/search?name=${search}`);
       setUsers(res.data);
     } catch (err) {
+      console.error(err);
       alert("Search failed");
     }
   };
@@ -36,9 +48,10 @@ function UserList() {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/user/${id}`);
+      await API.delete(`/user/${id}`);
       fetchAll();
     } catch (err) {
+      console.error(err);
       alert("Delete failed");
     }
   };
@@ -46,25 +59,18 @@ function UserList() {
   /* ================= UPDATE USER ================= */
   const updateUser = async () => {
     try {
-      await axios.put(
-        `http://localhost:5000/user/update/${editUser._id}`,
-        editUser,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      await API.put(`/user/update/${editUser._id}`, editUser);
 
       alert("User updated successfully!");
       setEditUser(null);
       fetchAll();
     } catch (err) {
+      console.error(err);
       alert("Update failed");
     }
   };
 
-  /* ================= HANDLE INPUT CHANGE ================= */
+  /* ================= HANDLE INPUT ================= */
   const handleChange = (e) => {
     setEditUser({
       ...editUser,
@@ -80,31 +86,23 @@ function UserList() {
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h2>Registered Users</h2>
 
-      {/* ================= SEARCH BOX ================= */}
+      {/* SEARCH */}
       <div style={{ marginBottom: "20px" }}>
         <input
           type="text"
           placeholder="Search by name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{
-            padding: "8px",
-            width: "250px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
+          style={inputStyle}
         />
 
-        <button onClick={searchUser} style={{ marginLeft: "10px" }}>
-          Search
-        </button>
-
+        <button onClick={searchUser}>Search</button>
         <button onClick={fetchAll} style={{ marginLeft: "10px" }}>
           Reset
         </button>
       </div>
 
-      {/* ================= TABLE ================= */}
+      {/* TABLE */}
       <table border="1" width="100%" cellPadding="10">
         <thead>
           <tr>
@@ -119,162 +117,66 @@ function UserList() {
         </thead>
 
         <tbody>
-          {users.map((user) => (
-            <tr key={user._id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.phone}</td>
-              <td>{user.gender || "-"}</td>
-              <td>{user.place}</td>
-              <td>{user.username}</td>
-
-              <td>
-                <button
-                  onClick={() => setEditUser(user)}
-                  style={{
-                    background: "green",
-                    color: "white",
-                    marginRight: "8px",
-                    padding: "5px 10px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Update
-                </button>
-
-                <button
-                  onClick={() => deleteUser(user._id)}
-                  style={{
-                    background: "red",
-                    color: "white",
-                    padding: "5px 10px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
+          {users.length === 0 ? (
+            <tr>
+              <td colSpan="7">No users found</td>
             </tr>
-          ))}
+          ) : (
+            users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.phone}</td>
+                <td>{user.gender || "-"}</td>
+                <td>{user.place}</td>
+                <td>{user.username}</td>
+
+                <td>
+                  <button onClick={() => setEditUser(user)}>Update</button>
+                  <button onClick={() => deleteUser(user._id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
 
-      {/* ================= UPDATE POPUP ================= */}
+      {/* UPDATE POPUP */}
       {editUser && (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "#111827",
-            padding: "25px",
-            borderRadius: "12px",
-            width: "380px",
-            color: "white",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-          }}
-        >
-          <h3 style={{ textAlign: "center", marginBottom: "15px" }}>
-            Update User
-          </h3>
+        <div style={popupStyle}>
+          <h3>Update User</h3>
 
-          {/* NAME */}
-          <label>Name:</label>
-          <input
-            name="name"
-            value={editUser.name}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+          <input name="name" value={editUser.name} onChange={handleChange} style={inputStyle} />
+          <input name="email" value={editUser.email} onChange={handleChange} style={inputStyle} />
+          <input name="phone" value={editUser.phone} onChange={handleChange} style={inputStyle} />
+          <input name="place" value={editUser.place} onChange={handleChange} style={inputStyle} />
+          <input name="weight" value={editUser.weight || ""} onChange={handleChange} style={inputStyle} />
+          <input name="height" value={editUser.height || ""} onChange={handleChange} style={inputStyle} />
 
-          {/* EMAIL */}
-          <label>Email:</label>
-          <input
-            name="email"
-            value={editUser.email}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* PHONE */}
-          <label>Phone:</label>
-          <input
-            name="phone"
-            value={editUser.phone}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* PLACE */}
-          <label>Place:</label>
-          <input
-            name="place"
-            value={editUser.place}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* WEIGHT */}
-          <label>Weight:</label>
-          <input
-            name="weight"
-            value={editUser.weight || ""}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* HEIGHT */}
-          <label>Height:</label>
-          <input
-            name="height"
-            value={editUser.height || ""}
-            onChange={handleChange}
-            style={inputStyle}
-          />
-
-          {/* BUTTONS */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "15px" }}>
-            <button
-              onClick={updateUser}
-              style={{
-                background: "#22c55e",
-                color: "white",
-                padding: "8px 15px",
-                borderRadius: "6px",
-                border: "none",
-              }}
-            >
-              Save
-            </button>
-
-            <button
-              onClick={() => setEditUser(null)}
-              style={{
-                background: "#ef4444",
-                color: "white",
-                padding: "8px 15px",
-                borderRadius: "6px",
-                border: "none",
-              }}
-            >
-              Cancel
-            </button>
-          </div>
+          <button onClick={updateUser}>Save</button>
+          <button onClick={() => setEditUser(null)}>Cancel</button>
         </div>
       )}
     </div>
   );
 }
 
-/* ================= INPUT STYLE ================= */
+/* STYLES */
 const inputStyle = {
-  width: "100%",
   padding: "8px",
-  marginBottom: "10px",
-  marginTop: "5px",
-  borderRadius: "5px",
-  border: "none",
+  margin: "5px",
+};
+
+const popupStyle = {
+  position: "fixed",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  background: "#111",
+  padding: "20px",
+  color: "white",
 };
 
 export default UserList;

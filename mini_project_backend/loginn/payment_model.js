@@ -4,39 +4,19 @@ const paymentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
+  amount: Number,
 
-  amount: {
-    type: Number,
-    required: true,
-  },
-
-  currency: {
-    type: String,
-    default: "INR",
-  },
+  month: Number,
+  year: Number,
 
   status: {
     type: String,
-    enum: ["pending", "paid", "failed"],
+    enum: ["pending", "paid"],
     default: "pending",
   },
 
-  razorpayOrderId: String,
-  razorpayPaymentId: String,
-  razorpaySignature: String,
-
-  // 🔥 NEW → Prevent double payment
-  month: {
-    type: Number,
-    required: true,
-  },
-  year: {
-    type: Number,
-    required: true,
-  }
-
+  paymentId: String,
 }, { timestamps: true });
 
 module.exports = mongoose.model("Payment", paymentSchema);

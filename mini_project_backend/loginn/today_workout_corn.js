@@ -34,7 +34,7 @@ const exercisesPool = {
 const muscles = Object.keys(exercisesPool);
 
 // 🕙 10:05 PM DAILY CRON
-cron.schedule("8 22 * * *", async () => {
+cron.schedule("9 11 * * *", async () => {
   console.log("\n🔥 ===== 10:05 PM WORKOUT GENERATION STARTED =====\n");
 
   try {
