@@ -1,88 +1,135 @@
-/* PAGE */
-.trainer-page {
-  padding: 20px;
-  font-family: "Segoe UI", sans-serif;
-  background: #0f172a;
-  min-height: 100vh;
-  color: white;
+/* 🌌 PAGE BACKGROUND */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: url("https://images.unsplash.com/photo-1594737625785-a6cbdabd333c")
+    no-repeat center center/cover;
 }
 
-/* TITLE */
-.title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* SEARCH */
-.search-section {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.search-section input {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  min-width: 200px;
-}
-
-.search-section button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  background: #22c55e;
-  color: white;
-  cursor: pointer;
-}
-
-.search-section .clear {
-  background: #ef4444;
-}
-
-/* DATE */
-.date-section {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.date-section input {
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-}
-
-/* TABLE WRAPPER */
-.table-container {
-  max-width: 100%;
-  overflow-x: auto;
-  background: rgba(255,255,255,0.05);
-  padding: 10px;
-  border-radius: 10px;
-}
-
-/* TABLE */
-table {
+/* 🌑 DARK OVERLAY */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  border-collapse: collapse;
-  min-width: 700px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: -1;
 }
 
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  text-align: left;
+/* MAIN CONTAINER */
+.workout-container {
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
-th {
-  background: rgba(255,255,255,0.1);
+/* 🔥 TITLE */
+.title {
+  font-size: 34px;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #00ffcc, #00c3ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-tr:hover {
-  background: rgba(255,255,255,0.05);
+/* 💪 MUSCLE TAG */
+.muscle {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-bottom: 25px;
+  border-radius: 30px;
+  font-weight: bold;
+  backdrop-filter: blur(10px);
+}
+
+/* COLOR VARIATIONS */
+.muscle-biceps {
+  background: rgba(255, 99, 132, 0.2);
+  color: #ff4d6d;
+}
+
+.muscle-triceps {
+  background: rgba(255, 206, 86, 0.2);
+  color: #ffc107;
+}
+
+.muscle-chest {
+  background: rgba(54, 162, 235, 0.2);
+  color: #00bfff;
+}
+
+.muscle-back {
+  background: rgba(75, 192, 192, 0.2);
+  color: #00ffcc;
+}
+
+.muscle-legs {
+  background: rgba(153, 102, 255, 0.2);
+  color: #a66cff;
+}
+
+/* GRID */
+.exercises-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+/* 💎 CARD */
+.exercise-card {
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* 🔥 HOVER EFFECT */
+.exercise-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 255, 204, 0.6);
+}
+
+/* TEXT */
+.exercise-name {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #00ffcc;
+}
+
+.exercise-detail {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* ❌ NO WORKOUT */
+.no-workout {
+  font-size: 18px;
+  color: #ff4d4d;
+}
+
+/* ⏳ LOADING */
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 18px;
+  color: #00ffcc;
+}
+
+/* ✨ ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
